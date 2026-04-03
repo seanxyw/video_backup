@@ -3,7 +3,7 @@
 Commands:
     scan    <input_folder>            Workflow 1: scan & update timestamps
     split   <input_folder>            Workflow 2: copy to output/photos|youtube|unknown
-    upload  <input_folder> [--title]  Workflow 3: upload videos to YouTube
+    upload  <youtube_folder> [--title] Workflow 3: upload videos to YouTube
 """
 
 import sys
@@ -36,16 +36,16 @@ def main() -> None:
 
     elif command == "upload":
         if len(sys.argv) < 3:
-            print("Usage: python main.py upload <input_folder> [--title <playlist_title>]")
+            print("Usage: python main.py upload <youtube_folder> [--title <playlist_title>]")
             sys.exit(1)
         from upload import upload
-        input_folder = sys.argv[2]
+        youtube_folder = sys.argv[2]
         title = None
         if "--title" in sys.argv:
             idx = sys.argv.index("--title")
             if idx + 1 < len(sys.argv):
                 title = sys.argv[idx + 1]
-        upload(input_folder, playlist_title=title)
+        upload(youtube_folder, playlist_title=title)
 
     else:
         print(f"Unknown command: {command}")

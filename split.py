@@ -14,8 +14,10 @@ import json
 import shutil
 from pathlib import Path
 
+from utils import _now
+
 BASE_DIR = Path(__file__).parent
-SCAN_DIR = BASE_DIR / "scan"
+SCAN_DIR = BASE_DIR / "index"
 OUTPUT_DIR = BASE_DIR / "output"
 
 
@@ -28,7 +30,7 @@ def split(input_folder: str) -> None:
     scan_json = SCAN_DIR / f"{folder_name}.json"
     if not scan_json.exists():
         raise SystemExit(
-            f"Error: scan file not found: {scan_json}\n"
+            f"Error: index file not found: {scan_json}\n"
             f"Run 'python main.py scan {input_folder}' first."
         )
 
@@ -36,6 +38,7 @@ def split(input_folder: str) -> None:
         data = json.load(f)
 
     files = data["files"]
+    index_by_path = {e["path"]: e for e in files}
     total = len(files)
     print(f"Splitting '{input_path}' ({total} files from scan)...")
 
@@ -87,6 +90,7 @@ def split(input_folder: str) -> None:
             continue
 
         counts[kind] = counts.get(kind, 0) + 1
+        index_by_path[rel].setdefault("lifecycle", []).append({"stage": "split", "at": _now()})
         print(f"  [{i}/{total}] {kind.upper():<7}  {rel}")
 
     copied_total = sum(counts.values())
@@ -109,6 +113,9 @@ def split(input_folder: str) -> None:
         if expected != actual:
             print(f"  COUNT_MISMATCH {label}: expected {expected}, found {actual} on disk")
             count_ok = False
+
+    with open(scan_json, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
 
     if errors:
         print(f"\n{len(errors)} error(s):")

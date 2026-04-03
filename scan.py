@@ -6,14 +6,15 @@ Usage:
 - Recursively scan input_folder for media files
 - Extract original capture date (EXIF > video metadata > file mtime)
 - Update each file's mtime to the original capture date
-- Write scan/<folder_name>.json with stats and per-file info
+- Write index/<folder_name>.json with stats and per-file info
 """
 
 import json
 import os
 import time
-from datetime import datetime, timezone
 from pathlib import Path
+
+from utils import _now
 
 import exifread
 from hachoir.metadata import extractMetadata
@@ -21,7 +22,7 @@ from hachoir.parser import createParser
 
 from media_types import classify
 
-SCAN_DIR = Path(__file__).parent / "scan"
+SCAN_DIR = Path(__file__).parent / "index"
 
 
 # ---------------------------------------------------------------------------
@@ -129,6 +130,7 @@ def scan(input_folder: str) -> None:
             "capture_date": dt.isoformat(),
             "date_source": source,
             "size": size,
+            "lifecycle": [{"stage": "scanned", "at": _now()}],
         })
 
         print(f"  [{i}/{total}] {kind.upper():<7} {source:<6}  {rel}")

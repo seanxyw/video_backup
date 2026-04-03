@@ -18,12 +18,11 @@ output/youtube/*
 !output/youtube/.gitkeep
 output/unknown/*
 !output/unknown/.gitkeep
-scan/*
-!scan/.gitkeep
+index/*
+!index/.gitkeep
 
-# Google OAuth credentials
-client_secret*.json
-token*.json
+# Secrets (OAuth credentials, tokens)
+secrets/
 
 # Claude memory
 .claude/
