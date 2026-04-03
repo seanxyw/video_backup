@@ -1,0 +1,29 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Media files (keep folder structure, ignore contents)
+input/*
+!input/.gitkeep
+output/photos/*
+!output/photos/.gitkeep
+output/youtube/*
+!output/youtube/.gitkeep
+output/unknown/*
+!output/unknown/.gitkeep
+scan/*
+!scan/.gitkeep
+
+# Google OAuth credentials
+client_secret*.json
+token*.json
+
+# Claude memory
+.claude/
