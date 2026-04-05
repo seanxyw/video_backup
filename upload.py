@@ -255,18 +255,17 @@ def _save_index(scan_file: Path, index: dict) -> None:
         json.dump(index, f, ensure_ascii=False, indent=2)
 
 
-def upload(youtube_folder: str, playlist_title: str | None = None) -> None:
-    youtube_dir = Path(youtube_folder).resolve()
-    folder_name = youtube_dir.name
+def upload(folder_name: str, playlist_title: str | None = None) -> None:
     index_file = SCAN_DIR / f"{folder_name}.json"
-
-    if not youtube_dir.is_dir():
-        raise SystemExit(
-            f"Error: '{youtube_dir}' not found. Run 'python main.py split' first."
-        )
     if not index_file.exists():
         raise SystemExit(
-            f"Error: '{index_file}' not found. Run 'python main.py scan' first."
+            f"Error: '{index_file}' not found. Run 'python main.py scan <input_folder>' first."
+        )
+
+    youtube_dir = BASE_DIR / "output" / "youtube" / folder_name
+    if not youtube_dir.is_dir():
+        raise SystemExit(
+            f"Error: '{youtube_dir}' not found. Run 'python main.py split {folder_name}' first."
         )
 
     index = _load_index(index_file)

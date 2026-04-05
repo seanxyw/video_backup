@@ -21,21 +21,20 @@ SCAN_DIR = BASE_DIR / "index"
 OUTPUT_DIR = BASE_DIR / "output"
 
 
-def split(input_folder: str) -> None:
-    input_path = Path(input_folder).resolve()
-    if not input_path.is_dir():
-        raise SystemExit(f"Error: '{input_folder}' is not a directory")
-
-    folder_name = input_path.name
+def split(folder_name: str) -> None:
     scan_json = SCAN_DIR / f"{folder_name}.json"
     if not scan_json.exists():
         raise SystemExit(
             f"Error: index file not found: {scan_json}\n"
-            f"Run 'python main.py scan {input_folder}' first."
+            f"Run 'python main.py scan <input_folder>' first."
         )
 
     with open(scan_json, encoding="utf-8") as f:
         data = json.load(f)
+
+    input_path = Path(data["input_folder"])
+    if not input_path.is_dir():
+        raise SystemExit(f"Error: input folder '{input_path}' not found (stored in index)")
 
     files = data["files"]
     index_by_path = {e["path"]: e for e in files}

@@ -78,7 +78,7 @@ uv run python main.py scan input/2025-12-19-生态瓶
 ### 第二步：分类
 
 ```bash
-uv run python main.py split input/2025-12-19-生态瓶
+uv run python main.py split 2025-12-19-生态瓶
 ```
 
 - 照片 → `output/photos/2025-12-19-生态瓶/`
@@ -88,7 +88,7 @@ uv run python main.py split input/2025-12-19-生态瓶
 ### 第三步：上传视频
 
 ```bash
-uv run python main.py upload output/youtube/2025-12-19-生态瓶
+uv run python main.py upload 2025-12-19-生态瓶
 ```
 
 - 首次运行会打开浏览器，完成 Google 账号授权（只需一次）
@@ -99,7 +99,7 @@ uv run python main.py upload output/youtube/2025-12-19-生态瓶
 可以用 `--title` 自定义播放列表名称：
 
 ```bash
-uv run python main.py upload output/youtube/2025-12-19-生态瓶 --title "生态瓶观察记录"
+uv run python main.py upload 2025-12-19-生态瓶 --title "生态瓶观察记录"
 ```
 
 ---
