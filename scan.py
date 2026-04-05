@@ -1,12 +1,13 @@
 """Workflow 1 — scan
 
 Usage:
-    python main.py scan <input_folder>
+    python main.py scan <input_folder> [--output-dir <output_dir>]
 
 - Recursively scan input_folder for media files
 - Extract original capture date (EXIF > video metadata > file mtime)
 - Update each file's mtime to the original capture date
 - Write index/<folder_name>.json with stats and per-file info
+  (output_dir defaults to <project>/output if not specified)
 """
 
 import json
@@ -95,10 +96,12 @@ def set_mtime(path: Path, dt: datetime) -> None:
 # Main scan logic
 # ---------------------------------------------------------------------------
 
-def scan(input_folder: str) -> None:
+def scan(input_folder: str, output_dir: str | None = None) -> None:
     input_path = Path(input_folder).resolve()
     if not input_path.is_dir():
         raise SystemExit(f"Error: '{input_folder}' is not a directory")
+
+    output_path = Path(output_dir).resolve() if output_dir else Path(__file__).parent / "output"
 
     folder_name = input_path.name
     SCAN_DIR.mkdir(exist_ok=True)
@@ -138,6 +141,7 @@ def scan(input_folder: str) -> None:
 
     result = {
         "input_folder": str(input_path),
+        "output_dir": str(output_path),
         "folder_name": folder_name,
         "scanned_at": datetime.now().isoformat(),
         "counts": {

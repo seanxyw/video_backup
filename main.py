@@ -1,9 +1,9 @@
 """video-backup CLI
 
 Commands:
-    scan    <input_folder>            Workflow 1: scan & update timestamps
-    split   <folder_name>              Workflow 2: copy to output/photos|youtube|unknown
-    upload  <folder_name> [--title]    Workflow 3: upload videos to YouTube
+    scan    <input_folder> [--output-dir <path>]   Workflow 1: scan & update timestamps
+    split   <folder_name>                           Workflow 2: copy to output dirs
+    upload  <folder_name> [--title <title>]         Workflow 3: upload videos to YouTube
 """
 
 import sys
@@ -22,10 +22,15 @@ def main() -> None:
 
     if command == "scan":
         if len(sys.argv) < 3:
-            print("Usage: python main.py scan <input_folder>")
+            print("Usage: python main.py scan <input_folder> [--output-dir <path>]")
             sys.exit(1)
         from scan import scan
-        scan(sys.argv[2])
+        output_dir = None
+        if "--output-dir" in sys.argv:
+            idx = sys.argv.index("--output-dir")
+            if idx + 1 < len(sys.argv):
+                output_dir = sys.argv[idx + 1]
+        scan(sys.argv[2], output_dir=output_dir)
 
     elif command == "split":
         if len(sys.argv) < 3:

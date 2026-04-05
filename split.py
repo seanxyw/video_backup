@@ -18,7 +18,6 @@ from utils import _now
 
 BASE_DIR = Path(__file__).parent
 SCAN_DIR = BASE_DIR / "index"
-OUTPUT_DIR = BASE_DIR / "output"
 
 
 def split(folder_name: str) -> None:
@@ -36,14 +35,16 @@ def split(folder_name: str) -> None:
     if not input_path.is_dir():
         raise SystemExit(f"Error: input folder '{input_path}' not found (stored in index)")
 
+    output_dir = Path(data["output_dir"])
+
     files = data["files"]
     index_by_path = {e["path"]: e for e in files}
     total = len(files)
     print(f"Splitting '{input_path}' ({total} files from scan)...")
 
-    photos_dir = OUTPUT_DIR / "photos" / folder_name
-    youtube_dir = OUTPUT_DIR / "youtube" / folder_name
-    unknown_dir = OUTPUT_DIR / "unknown" / folder_name
+    photos_dir = output_dir / "photos" / folder_name
+    youtube_dir = output_dir / "youtube" / folder_name
+    unknown_dir = output_dir / "unknown" / folder_name
     for d in (photos_dir, youtube_dir, unknown_dir):
         d.mkdir(parents=True, exist_ok=True)
 

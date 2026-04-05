@@ -68,12 +68,19 @@ uv run python main.py <命令> <参数>
 ### 第一步：扫描
 
 ```bash
-uv run python main.py scan input/2025-12-19-生态瓶
+uv run python main.py scan /path/to/2025-12-19-生态瓶
 ```
 
+可以用 `--output-dir` 指定输出目录（默认是项目目录下的 `output/`）：
+
+```bash
+uv run python main.py scan /path/to/2025-12-19-生态瓶 --output-dir /Volumes/MyDisk/backup
+```
+
+- 支持任意路径（绝对路径或相对路径均可）
 - 递归扫描文件夹里的所有文件
 - 读取拍摄时间并更新文件的修改时间
-- 生成 `index/2025-12-19-生态瓶.json`
+- 生成 `index/2025-12-19-生态瓶.json`（记录输入和输出目录路径，后续命令自动使用）
 
 ### 第二步：分类
 
@@ -108,8 +115,7 @@ uv run python main.py upload 2025-12-19-生态瓶 --title "生态瓶观察记录
 
 ```
 video-backup/
-├── input/               # 放原始素材的地方（不纳入 git）
-├── output/
+├── output/              # 默认输出目录（可用 --output-dir 指定其他位置）
 │   ├── photos/          # 分类后的照片
 │   ├── youtube/         # 待上传的视频（上传验证通过后自动删除）
 │   └── unknown/         # 无法识别格式的文件

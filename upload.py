@@ -262,13 +262,13 @@ def upload(folder_name: str, playlist_title: str | None = None) -> None:
             f"Error: '{index_file}' not found. Run 'python main.py scan <input_folder>' first."
         )
 
-    youtube_dir = BASE_DIR / "output" / "youtube" / folder_name
+    index = _load_index(index_file)
+
+    youtube_dir = Path(index["output_dir"]) / "youtube" / folder_name
     if not youtube_dir.is_dir():
         raise SystemExit(
             f"Error: '{youtube_dir}' not found. Run 'python main.py split {folder_name}' first."
         )
-
-    index = _load_index(index_file)
 
     # Build a lookup: youtube_filename → file entry (videos only)
     # youtube_filename matches what split.py produces: "_".join(Path(rel).parts)
