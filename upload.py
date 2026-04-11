@@ -58,8 +58,12 @@ def _authenticate():
 
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
+            try:
+                creds.refresh(Request())
+            except Exception:
+                TOKEN_FILE.unlink(missing_ok=True)
+                creds = None
+        if not creds:
             flow = InstalledAppFlow.from_client_secrets_file(
                 str(_get_client_secret()), SCOPES
             )
@@ -121,6 +125,8 @@ def _upload_video(youtube, video_path: Path) -> str | None:
         print(f"    uploaded  → https://youtu.be/{video_id}")
         return video_id
     except HttpError as e:
+        if e.status_code == 403 and "quotaExceeded" in str(e):
+            raise
         print(f"    ERROR uploading: {e}")
         return None
 
@@ -132,8 +138,11 @@ def _wait_until_processed(youtube, video_id: str) -> bool:
         response = youtube.videos().list(part="status", id=video_id).execute()
         items = response.get("items", [])
         if not items:
-            print("    ERROR: video not found while polling")
-            return False
+            # Video may not be indexed yet right after upload — keep polling
+            elapsed = int(time.time() - start)
+            print(f"    waiting for video to appear... ({elapsed}s)", end="\r", flush=True)
+            time.sleep(PROCESS_POLL_INTERVAL)
+            continue
         upload_status = items[0]["status"]["uploadStatus"]
         if upload_status == "processed":
             print("    processing done")

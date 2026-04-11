@@ -17,6 +17,8 @@ EXCLUDED_FILENAMES = {".ds_store", ".gitkeep"}
 def classify(path: str) -> str:
     """Return 'photo', 'video', 'unknown', or 'excluded'."""
     filename = path.rsplit("/", 1)[-1].rsplit("\\", 1)[-1].lower()
+    if filename.startswith("._"):
+        return "excluded"
     if filename in EXCLUDED_FILENAMES:
         return "excluded"
     ext = f".{filename.rsplit('.', 1)[-1]}" if "." in filename else ""
