@@ -26,3 +26,7 @@ secrets/
 
 # Claude memory
 .claude/
+
+# macOS metadata
+.DS_Store
+**/.DS_Store
